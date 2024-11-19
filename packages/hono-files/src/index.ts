@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server"
 import { Hono } from "hono"
 import { Readable } from "stream"
-import { createReadStream, existsSync } from "fs"
+import { createReadStream, existsSync, writeFileSync } from "fs"
 import path from "path"
 import { prettyJSON } from "hono/pretty-json"
 import { cors } from "hono/cors"
@@ -33,7 +33,19 @@ app.get("/file/:name", (c) => {
 
 app.post("/upload", async (c) => {
   const body = await c.req.parseBody()
-  console.log(body["file"])
+  const file = body["file"]
+
+  if (!(file instanceof File)) {
+    return c.json({ message: "File not found", ok: false }, 404)
+  }
+
+  const filePath = path.join("file-storage", file.name)
+  const buffer = await file.arrayBuffer()
+  writeFileSync(filePath, Buffer.from(buffer))
+
+  console.log("File uploaded", file.name)
+
+  return c.json({ message: "File uploaded", fileName: file.name, ok: true })
 })
 
 const port = 3333
