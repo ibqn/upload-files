@@ -1,7 +1,8 @@
 import { serve } from "@hono/node-server"
 import { Hono } from "hono"
 import { Readable } from "stream"
-import { createReadStream, existsSync, writeFileSync } from "fs"
+import { createReadStream } from "fs"
+import { access, writeFile } from "fs/promises"
 import path from "path"
 import { prettyJSON } from "hono/pretty-json"
 import { cors } from "hono/cors"
@@ -17,15 +18,18 @@ app.get("/", (c) => {
   return c.text("Hello Hono!")
 })
 
-app.get("/file/:name", (c) => {
+app.get("/file/:name", async (c) => {
   const { name } = c.req.param()
-  // const filePath = path.join("file-storage", "nasa-rTZW4f02zY8-unsplash.jpg")
   const filePath = path.join("file-storage", name)
-  if (!existsSync(filePath)) {
+
+  try {
+    await access(filePath)
+  } catch (error) {
     return c.json({ message: "File not found", ok: false }, 404)
   }
-  const nodeStream = createReadStream(filePath)
-  const stream = Readable.toWeb(nodeStream) as ReadableStream
+
+  const readStream = createReadStream(filePath)
+  const stream = Readable.toWeb(readStream) as ReadableStream
 
   c.header("Content-Type", "image/jpeg")
   return c.body(stream)
@@ -41,7 +45,7 @@ app.post("/upload", async (c) => {
 
   const filePath = path.join("file-storage", file.name)
   const buffer = await file.arrayBuffer()
-  writeFileSync(filePath, Buffer.from(buffer))
+  await writeFile(filePath, Buffer.from(buffer))
 
   console.log("File uploaded", file.name)
 
