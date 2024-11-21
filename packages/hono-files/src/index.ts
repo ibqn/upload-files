@@ -39,7 +39,7 @@ app.post("/upload", async (c) => {
   const body = await c.req.parseBody()
   const file = body["file"]
 
-  await new Promise((resolve) => setTimeout(resolve, 3000))
+  // await new Promise((resolve) => setTimeout(resolve, 3000))
 
   if (!(file instanceof File)) {
     return c.json({ message: "File not found", ok: false }, 404)

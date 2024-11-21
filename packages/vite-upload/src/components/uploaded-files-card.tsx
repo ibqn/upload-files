@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { EmptyCard } from '@/components/empty-card'
-import { Button } from './ui/button'
+import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 
 interface UploadedFilesCardProps {
@@ -31,11 +31,11 @@ export function UploadedFilesCard({
           <ScrollArea className="pb-4">
             <div className="flex w-max space-x-2.5">
               {uploadedFiles.map((file, index) => (
-                <div key={index} className="relative aspect-video w-64">
+                <div key={index} className="group relative aspect-video w-64">
                   <div className="absolute right-1.5 top-1.5 bg-transparent">
                     <Button
                       variant="outline"
-                      className="h-auto border-transparent/20 bg-transparent/20 p-1"
+                      className="h-auto p-1 opacity-0 group-hover:opacity-100"
                       onClick={() => onRemove?.(index)}
                     >
                       <X className="size-4" aria-hidden="true" />
