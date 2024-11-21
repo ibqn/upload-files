@@ -53,8 +53,14 @@ export function useUploadFile({
     }
   }
 
+  function onRemove(index: number) {
+    const newFiles = uploadedFiles.filter((_, i) => i !== index)
+    setUploadedFiles(newFiles)
+  }
+
   return {
     onUpload,
+    onRemove,
     uploadedFiles,
     progresses,
     isUploading,
