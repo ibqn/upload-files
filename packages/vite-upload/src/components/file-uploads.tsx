@@ -1,11 +1,13 @@
 import { uploadFiles, UploadSuccess } from '@/lib/upload-files'
 import { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import { Layout } from '@/components/layout'
+import { UploadedFile } from '@/types'
+import { UploadedFilesCard } from '@/components/uploaded-files-card'
+import { Button } from '@/components/ui/button'
 
 export const FileUploads = () => {
   const [files, setFiles] = useState<File[] | null>()
-  const [uploadedFilePaths, setUploadedPaths] = useState<string[]>([])
-  // const [errors, setErrors] = useState()
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setFiles(() => (event.target.files ? Array.from(event.target.files) : null))
@@ -13,10 +15,19 @@ export const FileUploads = () => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault()
-    if (!files) return
+
+    if (!files) {
+      return
+    }
 
     const onUploadSuccess = ({ file }: UploadSuccess) => {
-      setUploadedPaths((prevUploadedPaths) => [...prevUploadedPaths, file.name])
+      setUploadedFiles((prevUploadedFiles) => [
+        ...prevUploadedFiles,
+        {
+          url: `/api/file/${file.name}`,
+          name: file.name,
+        },
+      ])
       console.log('Uploaded file:', file.name)
     }
 
@@ -25,7 +36,7 @@ export const FileUploads = () => {
 
   return (
     <Layout>
-      <div className="container mx-auto flex-col items-center justify-center gap-2">
+      <div className="container mx-auto flex flex-col justify-center gap-8">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col items-start gap-3"
@@ -40,26 +51,10 @@ export const FileUploads = () => {
                 <li>Size: {file.size} bytes</li>
               </ul>
             ))}
-          <button className="flex rounded-md border px-3 py-1" type="submit">
-            Upload
-          </button>
+          <Button type="submit">Upload</Button>
         </form>
-        {uploadedFilePaths.length > 0 && (
-          <div className="inline-flex flex-wrap gap-3 p-4">
-            {uploadedFilePaths.map((uploadedFilePath, index) => (
-              <div key={index}>
-                <div className="rounded-md border p-1">
-                  <img
-                    src={`/api/file/${uploadedFilePath}`}
-                    alt="Uploaded content"
-                    className="h-auto max-w-[400px] rounded-md"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        {/* {error && <p>Error uploading file: {error.message}</p>} */}
+
+        <UploadedFilesCard uploadedFiles={uploadedFiles} />
       </div>
     </Layout>
   )

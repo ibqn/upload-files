@@ -1,4 +1,4 @@
-import { File } from 'lucide-react'
+import { ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Icons } from '@/components/icons'
 import { ModeToggle } from '@/components/mode-toggle'
@@ -8,7 +8,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <a href="/" className="mr-2 flex items-center md:mr-6 md:space-x-2">
-          <File className="size-4" aria-hidden="true" />
+          <ImageIcon className="size-4" aria-hidden="true" />
           <span className="hidden font-bold md:inline-block">upload files</span>
         </a>
 

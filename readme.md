@@ -1,8 +1,5 @@
-```
-npm install
-npm run dev
-```
+## Getting started
 
-```
-open http://localhost:3000
+```sh
+pnpm i
 ```
