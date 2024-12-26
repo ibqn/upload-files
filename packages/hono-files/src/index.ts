@@ -6,6 +6,7 @@ import { access, writeFile } from "fs/promises"
 import path from "path"
 import { prettyJSON } from "hono/pretty-json"
 import { cors } from "hono/cors"
+import mime from "mime"
 
 const app = new Hono()
 
@@ -31,7 +32,13 @@ app.get("/file/:name", async (c) => {
   const readStream = createReadStream(filePath)
   const stream = Readable.toWeb(readStream) as ReadableStream
 
-  c.header("Content-Type", "image/jpeg")
+  const contentType = mime.getType(name)
+
+  if (!contentType) {
+    return c.json({ message: "Content-Type not found", ok: false }, 500)
+  }
+
+  c.header("Content-Type", contentType)
   return c.body(stream)
 })
 
