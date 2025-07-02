@@ -21,7 +21,7 @@ export function UploadedFilesCard({
   onRemove,
 }: UploadedFilesCardProps) {
   return (
-    <Card className="shadow-sm">
+    <Card className="shadow-xs">
       <CardHeader>
         <CardTitle>Uploaded files</CardTitle>
         <CardDescription>View the uploaded files here</CardDescription>
@@ -55,7 +55,7 @@ export function UploadedFilesCard({
           <EmptyCard
             title="No files uploaded"
             description="Upload some files to see them here"
-            className="w-full shadow-sm"
+            className="w-full shadow-xs"
           />
         )}
       </CardContent>
