@@ -64,7 +64,4 @@ app.post("/upload", async (c) => {
 const port = 3333
 console.log(`Server is running on http://localhost:${port}`)
 
-serve({
-  fetch: app.fetch,
-  port,
-})
+serve({ fetch: app.fetch, port })
